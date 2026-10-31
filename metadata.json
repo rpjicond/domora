@@ -1,0 +1,8 @@
+{
+  "name": "DOMORA",
+  "description": "Imobiliária de referência em Angola: Kilamba, Luanda e Talatona. Imóveis exclusivos para compra e aluguel com preços em Kwanza (Kz).",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
