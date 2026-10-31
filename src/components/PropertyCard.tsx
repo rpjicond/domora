@@ -172,9 +172,9 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             {displayPrice()}
           </div>
 
-          {/* Blue Title matching user screenshot */}
+          {/* Title in DOMORA dark emerald green, hovering to emerald */}
           <h3 
-            className="text-base font-bold text-[#0070ba] hover:text-[#005086] transition-colors leading-snug line-clamp-1 mb-1.5"
+            className="text-base font-bold text-[#0c241b] group-hover:text-[#10b981] transition-colors leading-snug line-clamp-1 mb-1.5"
             title={property.title}
           >
             {property.title}
@@ -254,7 +254,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               }}
               title={`Enviar mensagem para ${consultant.name}`}
               aria-label={`Enviar mensagem para ${consultant.name}`}
-              className="w-10 h-10 rounded-xl bg-[#0070f3] hover:bg-[#005bb5] text-white flex items-center justify-center transition-colors cursor-pointer shadow-sm active:scale-95"
+              className="w-10 h-10 rounded-xl bg-[#10b981] hover:bg-[#059669] text-white flex items-center justify-center transition-colors cursor-pointer shadow-xs active:scale-95"
             >
               <Mail className="w-4 h-4" />
             </button>

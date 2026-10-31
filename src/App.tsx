@@ -2024,7 +2024,7 @@ export default function App() {
       {/* Floating Green Circle: Speed-dial Social Media Menu (Bottom-Left) */}
       <SocialFloatingButton />
 
-      {/* Floating Blue Circle: Chat / Contact Button (Bottom-Right) */}
+      {/* Floating Action Button: Chat / Contact Button (Bottom-Right) */}
       <ChatFloatingButton onClick={() => setIsContactModalOpen(true)} />
 
       {/* Mobile Bottom Navigation Bar (Optimized for Phone Ergonomics) */}
