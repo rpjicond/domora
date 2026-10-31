@@ -2,26 +2,34 @@ import {
   Search, MapPin, Home, Banknote, Phone, Menu, X, Bath, Maximize, 
   Globe, ChevronDown, Check, Mail, Building, ArrowRight,
   ChevronLeft, ChevronRight, Heart, ShieldCheck, FileCheck, Key, 
-  Calculator, MessageCircle, Calendar, Sparkles, Filter, SlidersHorizontal
+  Calculator, MessageCircle, Calendar, Sparkles, Filter, SlidersHorizontal,
+  LayoutGrid, Map
 } from 'lucide-react';
 import React, { useState, useEffect, useMemo } from 'react';
 import { LoadingScreen } from './components/LoadingScreen';
+import { SocialFloatingButton } from './components/SocialFloatingButton';
+import { ChatFloatingButton } from './components/ChatFloatingButton';
+import { PropertyMapView } from './components/PropertyMapView';
+import { PropertyCard, Consultant } from './components/PropertyCard';
 
 interface Property {
   id: number;
   purpose: 'Comprar' | 'Aluguel';
   price: number;
+  currency?: string;
   title: string;
   area: number;
   beds: number;
   baths: number;
   type: 'Apartamento' | 'Moradia' | 'Loft' | 'Estúdio';
   location: string;
-  zone: 'Kilamba' | 'Talatona' | 'Miramar' | 'Nova Vida' | 'Ilha de Luanda' | 'Belas' | 'Outros';
+  zone: string;
   image: string;
+  images?: string[];
   description: string;
   amenities: string[];
   condoFee?: number;
+  consultant?: Consultant;
 }
 
 interface HeroSlideItem {
@@ -101,8 +109,8 @@ const translations = {
     baths: "Casas de Banho",
     minArea: "Área Mínima",
     search: "Pesquisar Imóveis",
-    portfolioTitle: "Portefólio de Imóveis em Angola",
-    portfolioSubtitle: "Propriedades verificadas para compra e aluguel em Luanda",
+    portfolioTitle: "Catálogo Completo",
+    portfolioSubtitle: "Propriedades verificadas para compra e aluguel com consultor exclusivo",
     clearFilters: "Limpar filtros",
     noResults: "Nenhum imóvel encontrado",
     tryAdjusting: "Tente ajustar os critérios de pesquisa para descobrir outras oportunidades.",
@@ -113,26 +121,28 @@ const translations = {
     bath: "WC",
     bathsPlural: "WCs",
     studio: "Estúdio / T0",
-    placeholderLoc: "Kilamba, Talatona, Miramar, Nova Vida...",
+    placeholderLoc: "Chiado, Cascais, Sintra, Kilamba, Talatona...",
     modalTitle: "Fale com a DOMORA",
-    modalSubtitle: "A nossa equipa em Luanda está ao seu dispor para visitas presenciais, esclarecimento jurídico e apoio no financiamento.",
+    modalSubtitle: "A nossa equipa está ao seu dispor para visitas presenciais, esclarecimento jurídico e apoio no financiamento.",
     nameLabel: "Nome Completo",
     emailLabel: "Endereço de Email",
-    phoneLabel: "Contacto Telefónico (Angola +244)",
+    phoneLabel: "Contacto Telefónico (+244 / +351)",
     messageLabel: "Mensagem ou Imóvel de Interesse",
     messagePlaceholder: "Indique o imóvel pretendido ou as suas preferências...",
     sendBtn: "Enviar Pedido de Contacto",
-    sentSuccess: "Pedido recebido com sucesso! Um consultor DOMORA entrará em contacto brevemente.",
+    sentSuccess: "Pedido recebido com sucesso! Um consultor entrará em contacto brevemente.",
     directContact: "Atendimento Personalizado",
-    address: "Centralidade do Kilamba / Talatona, Luanda - Angola",
+    address: "Avenidas Novas, Lisboa / Kilamba, Luanda",
     scheduleVisit: "Agendar Visita",
     viewDetails: "Ver Detalhes",
     whatsAppChat: "Falar no WhatsApp",
     financingSimulator: "Simulador de Crédito Habitacional",
-    financingSubtitle: "Estime a sua prestação mensal em Kwanzas (Kz) com base no prazo e valor de entrada",
+    financingSubtitle: "Estime a sua prestação mensal com base no prazo e valor de entrada",
     favorites: "Favoritos",
-    featuredZonesTitle: "Zonas de Prestígio em Luanda",
-    featuredZonesSubtitle: "Explore os melhores bairros e centralidades de Angola",
+    featuredZonesTitle: "Descubra as Melhores Zonas",
+    featuredZonesSubtitle: "Explore bairros com estilos de vida únicos, desde o charme histórico à tranquilidade à beira-mar.",
+    listView: "Lista",
+    mapView: "Mapa",
   },
   EN: {
     buy: "Buy",
@@ -144,7 +154,7 @@ const translations = {
     location: "Location",
     propType: "Property Type",
     maxPrice: "Max Price",
-    baths: "Bathrooms",
+    baths: "Baths",
     minArea: "Min Area",
     search: "Search Properties",
     portfolioTitle: "Real Estate Portfolio in Angola",
@@ -179,6 +189,8 @@ const translations = {
     favorites: "Favorites",
     featuredZonesTitle: "Prestigious Neighborhoods",
     featuredZonesSubtitle: "Explore top residential areas across Luanda",
+    listView: "List",
+    mapView: "Map",
   },
   FR: {
     buy: "Acheter",
@@ -225,6 +237,8 @@ const translations = {
     favorites: "Favoris",
     featuredZonesTitle: "Quartiers de Prestige",
     featuredZonesSubtitle: "Découvrez les meilleurs secteurs de Luanda",
+    listView: "Liste",
+    mapView: "Carte",
   },
   ES: {
     buy: "Comprar",
@@ -271,10 +285,124 @@ const translations = {
     favorites: "Favoritos",
     featuredZonesTitle: "Zonas Exclusivas de Luanda",
     featuredZonesSubtitle: "Descubra los barrios más demandados",
+    listView: "Lista",
+    mapView: "Mapa",
   }
 };
 
 const initialProperties: Property[] = [
+  { 
+    id: 101, 
+    purpose: "Comprar", 
+    price: 450000, 
+    currency: "€",
+    title: "Apartamento Exclusivo em Chiado - Prédio 1", 
+    area: 45, 
+    beds: 1, 
+    baths: 1, 
+    type: "Apartamento", 
+    location: "Chiado, Lisboa", 
+    zone: "Chiado",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Apartamento exclusivo no coração histórico do Chiado, com acabamentos premium, luz natural abundante e arquitetura contemporânea em condomínio de prestígio.",
+    amenities: ["Varanda Panorâmica", "Cozinha Equipada", "Ar Condicionado", "Elevador", "Garagem Privativa"],
+    consultant: {
+      name: "Ana Martins",
+      phone: "+351 912 345 678",
+      email: "ana.martins@domora.com",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
+    }
+  },
+  { 
+    id: 102, 
+    purpose: "Comprar", 
+    price: 522000, 
+    currency: "€",
+    title: "Moradia Exclusivo em Avenidas Novas - Prédio 2", 
+    area: 57, 
+    beds: 2, 
+    baths: 2, 
+    type: "Moradia", 
+    location: "Avenidas Novas, Lisboa", 
+    zone: "Avenidas Novas",
+    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Moradia de prestígio com piscina privativa, design minimalista e amplos vãos envidraçados. Perfeita harmonia entre interior e exterior com acabamentos de luxo.",
+    amenities: ["Piscina Privada", "Terraço Solário", "Suíte Master", "Garagem para 2 Carros", "Segurança 24h"],
+    consultant: {
+      name: "Ana Martins",
+      phone: "+351 912 345 678",
+      email: "ana.martins@domora.com",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
+    }
+  },
+  { 
+    id: 103, 
+    purpose: "Comprar", 
+    price: 594000, 
+    currency: "€",
+    title: "Moradia Exclusivo em Belém - Prédio 3", 
+    area: 69, 
+    beds: 3, 
+    baths: 3, 
+    type: "Moradia", 
+    location: "Belém, Lisboa", 
+    zone: "Belém",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Moradia exclusiva em zona nobre de Belém, integrada em jardim paisagístico com iluminação noturna cênica e áreas sociais de alto conforto.",
+    amenities: ["Jardim Iluminado", "3 Suítes", "Churrasqueira Gourmet", "Domótica Integrada", "Painéis Solares"],
+    consultant: {
+      name: "Ana Martins",
+      phone: "+351 912 345 678",
+      email: "ana.martins@domora.com",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
+    }
+  },
+  { 
+    id: 104, 
+    purpose: "Comprar", 
+    price: 666000, 
+    currency: "€",
+    title: "Apartamento Exclusivo em Cascais - Prédio 4", 
+    area: 81, 
+    beds: 4, 
+    baths: 4, 
+    type: "Apartamento", 
+    location: "Cascais", 
+    zone: "Cascais",
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
+    ],
+    description: "Apartamento deslumbrante em Cascais com vista desafogada, piscina exterior privativa do condomínio e acesso pedestre à praia.",
+    amenities: ["Piscina & Solário", "4 Quartos Suíte", "Box Fechada", "Ar Condicionado", "Portaria 24h"],
+    consultant: {
+      name: "Ana Martins",
+      phone: "+351 912 345 678",
+      email: "ana.martins@domora.com",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
+    }
+  },
   { 
     id: 1, 
     purpose: "Comprar", 
@@ -503,42 +631,42 @@ const initialProperties: Property[] = [
 ];
 
 const formatPrice = (price: number, purpose: 'Comprar' | 'Aluguel' = 'Comprar') => {
+  // If price is in Euro range (<= 2,000,000), format with € and space separator matching screenshot: "€ 522 000"
+  if (price <= 2000000) {
+    const formatted = `€ ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}`;
+    return purpose === 'Aluguel' ? `${formatted} / mês` : formatted;
+  }
   const formatted = `${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} Kz`;
   return purpose === 'Aluguel' ? `${formatted} / mês` : formatted;
 };
 
 const neighborhoodHighlights = [
   {
-    name: "Centralidade do Kilamba",
-    zone: "Kilamba" as const,
-    description: "Urbanismo contemporâneo, amplas avenidas, escolas de referência e excelente qualidade de vida para famílias.",
-    avgPriceBuy: "38M – 45M Kz",
-    avgPriceRent: "320K – 450K Kz",
-    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=600&q=80",
+    name: "Chiado & Baixa",
+    tag: "CORAÇÃO HISTÓRICO",
+    zone: "Chiado",
+    description: "Explore bairros com estilos de vida únicos, desde o charme histórico e cultural aos cafés e teatros emblemáticos.",
+    avgPriceBuy: "€ 450K – € 1.2M",
+    avgPriceRent: "€ 1.8K – € 3.5K",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
   },
   {
-    name: "Talatona",
-    zone: "Talatona" as const,
-    description: "O centro corporativo e residencial de alto padrão em Luanda. Condomínios fechados e vida cosmopolita.",
-    avgPriceBuy: "180M – 350M Kz",
-    avgPriceRent: "1.2M – 2.5M Kz",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80",
+    name: "Cascais & Estoril",
+    tag: "LUXO À BEIRA-MAR",
+    zone: "Cascais",
+    description: "Villas exclusivas à beira-mar, marinas de renome internacional, campos de golfe e pores do sol espetaculares.",
+    avgPriceBuy: "€ 660K – € 3.2M",
+    avgPriceRent: "€ 2.5K – € 6K",
+    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
   },
   {
-    name: "Miramar & Baixa",
-    zone: "Miramar" as const,
-    description: "Distrito diplomático com vista sobre a Baía de Luanda, embaixadas, restaurantes conceituados e alta segurança.",
-    avgPriceBuy: "300M – 500M Kz",
-    avgPriceRent: "1.8M – 3.5M Kz",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    name: "Nova Vida & Belas",
-    zone: "Nova Vida" as const,
-    description: "Ambiente calmo e familiar, condomínios com campos de golfe, clubes privados e segurança perimétrica.",
-    avgPriceBuy: "120M – 340M Kz",
-    avgPriceRent: "800K – 1.6M Kz",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80",
+    name: "Sintra",
+    tag: "REFÚGIO DA REALEZA",
+    zone: "Sintra",
+    description: "Palácios rodeados pela natureza luxuriante da serra, privacidade absoluta e refúgios aristocráticos de grande prestígio.",
+    avgPriceBuy: "€ 590K – € 2.8M",
+    avgPriceRent: "€ 2K – € 5K",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
   }
 ];
 
@@ -552,6 +680,7 @@ export default function App() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc' | 'area-desc'>('default');
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
 
   // Interactive Financing Calculator State
   const [calcPrice, setCalcPrice] = useState<number>(38000000);
@@ -781,6 +910,20 @@ export default function App() {
               {t.zones}
             </button>
             <button 
+              onClick={() => {
+                setViewMode('map');
+                document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className={`text-xs font-semibold px-3.5 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                viewMode === 'map'
+                  ? 'text-[#0c241b] bg-[#0c241b]/10 font-bold border-b-2 border-[#10b981]'
+                  : 'text-neutral-700 hover:text-[#0c241b] hover:bg-[#f0f6f3]'
+              }`}
+            >
+              <Map className="w-3.5 h-3.5 text-[#f59e0b]" />
+              <span>{t.mapView}</span>
+            </button>
+            <button 
               onClick={() => document.getElementById('simulador')?.scrollIntoView({ behavior: 'smooth' })}
               className="text-xs font-semibold px-3.5 py-1.5 rounded-lg text-neutral-700 hover:text-[#0c241b] hover:bg-[#f0f6f3] transition-all cursor-pointer"
             >
@@ -908,6 +1051,20 @@ export default function App() {
               className="text-left text-sm font-semibold py-2.5 px-3 rounded-lg text-neutral-800 hover:bg-[#f0f6f3] flex items-center justify-between"
             >
               <span>{t.zones}</span>
+              <ArrowRight className="w-4 h-4 text-[#10b981]" />
+            </button>
+            <button 
+              onClick={() => {
+                setViewMode('map');
+                setIsMenuOpen(false);
+                document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="text-left text-sm font-semibold py-2.5 px-3 rounded-lg text-neutral-800 hover:bg-[#f0f6f3] flex items-center justify-between"
+            >
+              <span className="flex items-center gap-2">
+                <Map className="w-4 h-4 text-[#f59e0b]" />
+                <span>{t.mapView}</span>
+              </span>
               <ArrowRight className="w-4 h-4 text-[#10b981]" />
             </button>
             <button 
@@ -1184,75 +1341,86 @@ export default function App() {
           </div>
         </section>
 
-        {/* Prestigious Neighborhoods (Zonas de Prestígio em Luanda) */}
+        {/* Prestigious Neighborhoods (Descubra as Melhores Zonas) */}
         <section id="zonas" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 scroll-mt-24">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-3 border-b border-[#e1ebe5] pb-4">
-            <div>
-              <span className="text-[11px] uppercase font-bold tracking-[0.2em] text-[#059669] flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
-                Guia de Luanda
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mt-1">
-                {t.featuredZonesTitle}
-              </h2>
-            </div>
-            <p className="text-xs sm:text-sm text-neutral-500 max-w-md">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0c241b] tracking-tight mb-2.5">
+              {t.featuredZonesTitle}
+            </h2>
+            <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed max-w-2xl mx-auto">
               {t.featuredZonesSubtitle}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {neighborhoodHighlights.map((zoneItem) => (
               <div 
-                key={zoneItem.zone}
-                onClick={() => handleSelectZone(zoneItem.zone)}
-                className="group bg-white rounded-2xl overflow-hidden border border-[#e1ebe5] hover:border-[#10b981]/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
+                key={zoneItem.name}
+                onClick={() => handleSelectZone(zoneItem.zone as any)}
+                className="group relative h-80 sm:h-96 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
               >
-                <div className="h-40 overflow-hidden relative">
-                  <img 
-                    src={zoneItem.image} 
-                    alt={zoneItem.name} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
-                  <span className="absolute bottom-3 left-3 text-white font-semibold text-sm drop-shadow-sm flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#f59e0b]" />
-                    {zoneItem.name}
+                <img 
+                  src={zoneItem.image} 
+                  alt={zoneItem.name} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+                
+                <div className="absolute bottom-6 left-6 right-6">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-300 block mb-1 drop-shadow-sm">
+                    {zoneItem.tag}
                   </span>
-                </div>
-                <div className="p-4 flex flex-col justify-between flex-grow">
-                  <p className="text-xs text-neutral-600 line-clamp-2 mb-3 leading-relaxed">
-                    {zoneItem.description}
-                  </p>
-                  <div className="pt-3 border-t border-[#e1ebe5] flex items-center justify-between text-[11px] text-neutral-500">
-                    <span>Compra: <strong className="text-[#0c241b]">{zoneItem.avgPriceBuy}</strong></span>
-                    <span className="text-[#0c241b] group-hover:text-[#059669] font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                      Ver <ArrowRight className="w-3 h-3 text-[#10b981]" />
-                    </span>
-                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
+                    {zoneItem.name}
+                  </h3>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Listings Section (Zero-Pill Architecture & Clean Metadata) */}
+        {/* Listings Section: Catálogo Completo */}
         <section id="listings" className="max-w-6xl mx-auto px-4 sm:px-6 py-8 scroll-mt-24">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#e1ebe5] pb-4 mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 mb-6">
             <div>
-              <span className="text-[11px] uppercase font-bold tracking-[0.2em] text-[#059669] flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
-                {showOnlyFavorites ? 'Os seus Imóveis Guardados' : 'Portefólio Exclusivo'}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mt-1">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0c241b] tracking-tight">
                 {showOnlyFavorites 
                   ? `Imóveis Favoritos (${filteredProperties.length})` 
-                  : `${t.portfolioTitle} (${filteredProperties.length})`}
+                  : t.portfolioTitle}
               </h2>
             </div>
 
-            {/* Sort & Quick Filter Bar */}
-            <div className="flex items-center gap-2 self-stretch sm:self-auto justify-between sm:justify-end">
+            {/* View Mode Toggle & Sort Bar */}
+            <div className="flex flex-wrap items-center gap-3 self-stretch sm:self-auto justify-between sm:justify-end">
+              {/* Segmented Control matching user Image 2: [ Lista | Mapa ] */}
+              <div className="flex items-center bg-white border border-neutral-200 p-0.5 rounded-lg shadow-2xs">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('list')}
+                  className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                    viewMode === 'list'
+                      ? 'bg-neutral-900 text-white shadow-xs'
+                      : 'text-neutral-600 hover:text-neutral-900'
+                  }`}
+                  aria-pressed={viewMode === 'list'}
+                >
+                  {t.listView}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('map')}
+                  className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                    viewMode === 'map'
+                      ? 'bg-neutral-900 text-white shadow-xs'
+                      : 'text-neutral-600 hover:text-neutral-900'
+                  }`}
+                  aria-pressed={viewMode === 'map'}
+                >
+                  {t.mapView}
+                </button>
+              </div>
+
+              {/* Sort Dropdown */}
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#e1ebe5] text-xs">
                 <SlidersHorizontal className="w-3.5 h-3.5 text-[#10b981]" />
                 <span className="text-neutral-500">Ordenar:</span>
@@ -1280,7 +1448,19 @@ export default function App() {
             </div>
           </div>
           
-          {filteredProperties.length === 0 ? (
+          {viewMode === 'map' ? (
+            <PropertyMapView
+              properties={filteredProperties as any}
+              favorites={favorites}
+              onToggleFavorite={toggleFavorite}
+              onSelectProperty={openPropertyDetail}
+              onContactClick={() => setIsContactModalOpen(true)}
+              selectedZoneFilter={filters.zone}
+              onSelectZone={handleSelectZone}
+              formatPrice={formatPrice}
+              language={lang}
+            />
+          ) : filteredProperties.length === 0 ? (
             <div className="py-20 text-center flex flex-col items-center justify-center border border-dashed border-[#e1ebe5] rounded-2xl bg-white p-8">
               <Search className="w-10 h-10 text-neutral-300 mb-3" />
               <h3 className="text-base font-semibold text-neutral-900 mb-1">{t.noResults}</h3>
@@ -1293,100 +1473,21 @@ export default function App() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredProperties.map((prop) => (
-                <article 
-                  key={prop.id} 
-                  onClick={() => openPropertyDetail(prop)}
-                  className="group bg-white rounded-2xl overflow-hidden border border-[#e1ebe5] hover:border-[#10b981]/50 hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer"
-                >
-                  {/* Photo Container */}
-                  <div className="h-56 overflow-hidden relative bg-neutral-100">
-                    <img 
-                      src={prop.image} 
-                      alt={prop.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-
-                    {/* Clean unboxed tag on top-left styled with signature dark emerald and aqua */}
-                    <div className="absolute top-3 left-3 bg-[#0c241b]/95 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-semibold text-white border border-emerald-900/50 shadow-xs flex items-center gap-1.5">
-                      <span>{prop.purpose}</span>
-                      <span className="text-emerald-400">·</span>
-                      <span className="text-[#5eead4]">{prop.type}</span>
-                    </div>
-
-                    {/* Favorite Heart Button on top-right */}
-                    <button
-                      type="button"
-                      onClick={(e) => toggleFavorite(prop.id, e)}
-                      aria-label="Adicionar aos favoritos"
-                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-neutral-700 flex items-center justify-center shadow-sm backdrop-blur-sm transition-transform active:scale-90"
-                    >
-                      <Heart 
-                        className={`w-4 h-4 transition-colors ${
-                          favorites.includes(prop.id) 
-                            ? 'fill-[#f59e0b] text-[#f59e0b]' 
-                            : 'text-neutral-500 hover:text-[#f59e0b]'
-                        }`} 
-                      />
-                    </button>
-                  </div>
-
-                  {/* Body Container */}
-                  <div className="p-5 flex flex-col justify-between flex-grow">
-                    <div>
-                      {/* Price in Angolan Kwanza with tabular numerals */}
-                      <div className="text-xl sm:text-2xl font-bold tracking-tight text-[#0c241b] tabular-nums mb-1">
-                        {formatPrice(prop.price, prop.purpose)}
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="text-sm font-medium text-neutral-800 line-clamp-1 mb-2">
-                        {prop.title}
-                      </h3>
-
-                      {/* Clean Unboxed Metadata with Dot Separators */}
-                      <div className="text-xs text-neutral-500 flex items-center gap-1.5 flex-wrap">
-                        <span>{formatBeds(prop.beds)}</span>
-                        <span aria-hidden="true" className="text-neutral-300">·</span>
-                        <span>{prop.baths} {prop.baths > 1 ? t.bathsPlural : t.bath}</span>
-                        <span aria-hidden="true" className="text-neutral-300">·</span>
-                        <span>{prop.area} m²</span>
-                        <span aria-hidden="true" className="text-neutral-300">·</span>
-                        <span className="truncate max-w-[130px] font-medium text-neutral-600">{prop.zone}</span>
-                      </div>
-                    </div>
-
-                    {/* Card Actions Footer */}
-                    <div className="pt-4 mt-4 border-t border-[#e1ebe5] flex items-center justify-between">
-                      <button 
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openPropertyDetail(prop);
-                        }}
-                        className="text-xs font-semibold text-[#0c241b] hover:text-[#059669] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
-                      >
-                        <span>{t.viewDetails}</span>
-                        <ArrowRight className="w-3 h-3 text-[#10b981]" />
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          sendWhatsAppMessage(prop);
-                        }}
-                        className="p-1.5 rounded-lg bg-[#10b981]/15 text-[#047857] hover:bg-[#10b981]/25 transition-colors flex items-center gap-1 text-[11px] font-medium"
-                        title="Perguntar no WhatsApp"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5 text-[#10b981]" />
-                        <span className="hidden xs:inline">WhatsApp</span>
-                      </button>
-                    </div>
-                  </div>
-                </article>
+                <PropertyCard
+                  key={prop.id}
+                  property={prop as any}
+                  onSelectProperty={openPropertyDetail}
+                  onContactClick={(p) => {
+                    setSelectedPropertyForModal(p as any);
+                    setIsContactModalOpen(true);
+                  }}
+                  onCallClick={(p) => {
+                    window.open(`tel:${p.consultant?.phone || '+351912345678'}`, '_self');
+                  }}
+                  formatPrice={formatPrice}
+                />
               ))}
             </div>
           )}
@@ -1870,6 +1971,12 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Floating Green Circle: Speed-dial Social Media Menu (Bottom-Left) */}
+      <SocialFloatingButton />
+
+      {/* Floating Blue Circle: Chat / Contact Button (Bottom-Right) */}
+      <ChatFloatingButton onClick={() => setIsContactModalOpen(true)} />
     </div>
   );
 }
