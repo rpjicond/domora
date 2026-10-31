@@ -34,8 +34,9 @@ interface Property {
 
 interface HeroSlideItem {
   id: number;
-  image: string;
+  image?: string;
   mobileImage?: string;
+  video?: string;
   tag: string;
   title: string;
   subtitle: string;
@@ -88,6 +89,15 @@ const heroSlides: HeroSlideItem[] = [
     showOverlayText: false,
     positionClass: "object-center",
     mobilePositionClass: "object-cover object-top"
+  },
+  {
+    id: 5,
+    video: "/assets/aistudio/20261031-2323-30.8374067_a17abd6f.mp4",
+    tag: "DOMORA Tour Aéreo 4K",
+    title: "Condomínio Jardim de Rosas",
+    subtitle: "Luanda, Angola",
+    showOverlayText: true,
+    positionClass: "object-center"
   }
 ];
 
@@ -1178,21 +1188,32 @@ export default function App() {
                   transition: 'opacity 1s ease-in-out, transform 7s ease-out'
                 }}
               >
-                <picture className="w-full h-full block">
-                  {slide.mobileImage && (
-                    <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
-                  )}
-                  <source media="(min-width: 641px)" srcSet={slide.image} />
-                  <img 
-                    src={slide.image} 
-                    alt={slide.title}
-                    className={`w-full h-full object-cover transition-all duration-700 ${
-                      slide.mobileImage 
-                        ? 'max-sm:object-cover max-sm:object-top sm:object-center' 
-                        : (slide.positionClass || 'object-center')
-                    }`}
+                {slide.video ? (
+                  <video 
+                    src={slide.video} 
+                    autoPlay 
+                    muted 
+                    loop 
+                    playsInline 
+                    className="w-full h-full object-cover"
                   />
-                </picture>
+                ) : (
+                  <picture className="w-full h-full block">
+                    {slide.mobileImage && (
+                      <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
+                    )}
+                    <source media="(min-width: 641px)" srcSet={slide.image} />
+                    <img 
+                      src={slide.image} 
+                      alt={slide.title}
+                      className={`w-full h-full object-cover transition-all duration-700 ${
+                        slide.mobileImage 
+                          ? 'max-sm:object-cover max-sm:object-top sm:object-center' 
+                          : (slide.positionClass || 'object-center')
+                      }`}
+                    />
+                  </picture>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
               </div>
             ))}
