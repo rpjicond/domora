@@ -237,7 +237,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               onClick={(e) => {
                 e.stopPropagation();
                 if (onCallClick) onCallClick(property);
-                else window.open(`tel:${consultant.phone}`, '_self');
+                else window.location.href = `tel:${consultant.phone}`;
               }}
               title={`Ligar para ${consultant.name}`}
               aria-label={`Ligar para ${consultant.name}`}

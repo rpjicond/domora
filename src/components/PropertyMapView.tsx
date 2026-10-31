@@ -589,7 +589,7 @@ export const PropertyMapView: React.FC<PropertyMapViewProps> = ({
                 </div>
 
                 <div className="mt-2 pt-2 border-t border-emerald-800/40 flex items-center justify-between gap-2">
-                  <div className="text-sm sm:text-base font-bold text-white font-serif">
+                  <div className="text-sm sm:text-base font-extrabold text-white">
                     {formatPrice(selectedProperty.price, selectedProperty.purpose)}
                   </div>
                   <button

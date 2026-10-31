@@ -882,7 +882,7 @@ export default function App() {
     const text = property 
       ? `Olá DOMORA, tenho interesse no imóvel "${property.title}" (${formatPrice(property.price, property.purpose)}). Gostaria de agendar uma visita e obter mais informações.`
       : `Olá DOMORA, gostaria de falar com um consultor imobiliário para encontrar um imóvel em Luanda.`;
-    window.open(`https://wa.me/244923000000?text=${encodeURIComponent(text)}`, '_blank');
+    window.location.href = `https://wa.me/244923000000?text=${encodeURIComponent(text)}`;
   };
 
   return (
@@ -1214,7 +1214,7 @@ export default function App() {
                 <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-[#5eead4] mb-2">
                   {heroSlides[currentSlide]?.tag}
                 </span>
-                <h1 className="text-3xl md:text-5xl font-serif font-normal tracking-tight text-white drop-shadow-md text-balance">
+                <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-md text-balance">
                   {heroSlides[currentSlide]?.title}
                 </h1>
                 <p className="mt-2 text-xs sm:text-sm text-neutral-200 font-light">
@@ -1523,7 +1523,7 @@ export default function App() {
                     setIsContactModalOpen(true);
                   }}
                   onCallClick={(p) => {
-                    window.open(`tel:${p.consultant?.phone || '+351912345678'}`, '_self');
+                    window.location.href = `tel:${p.consultant?.phone || '+351912345678'}`;
                   }}
                   formatPrice={formatPrice}
                 />
@@ -1540,7 +1540,7 @@ export default function App() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
                 Crédito & Aquisição
               </span>
-              <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mt-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mt-1">
                 {t.financingSimulator}
               </h2>
               <p className="text-xs sm:text-sm text-neutral-500 mt-1">
@@ -1674,7 +1674,7 @@ export default function App() {
               <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
               Garantia e Segurança
             </span>
-            <h2 className="text-2xl sm:text-3xl font-serif text-neutral-900 mt-1">
+            <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mt-1">
               Porquê Comprar ou Alugar com a DOMORA
             </h2>
           </div>
@@ -1934,7 +1934,7 @@ export default function App() {
               {t.directContact}
             </span>
 
-            <h3 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-1">
               {t.modalTitle}
             </h3>
             <p className="text-xs text-neutral-500 mb-5 leading-relaxed">
