@@ -8,13 +8,7 @@ interface ChatFloatingButtonProps {
 export const ChatFloatingButton: React.FC<ChatFloatingButtonProps> = ({ onClick }) => {
   return (
     <div
-      style={{
-        position: 'fixed',
-        bottom: '24px',
-        right: '24px',
-        zIndex: 99999,
-      }}
-      className="select-none print:hidden pointer-events-auto"
+      className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 select-none print:hidden pointer-events-auto"
     >
       <button
         type="button"

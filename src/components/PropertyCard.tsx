@@ -53,15 +53,34 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
       ];
 
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-  const prevImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const prevImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     setCurrentImgIndex((prev) => (prev - 1 + imageList.length) % imageList.length);
   };
 
-  const nextImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const nextImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     setCurrentImgIndex((prev) => (prev + 1) % imageList.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (diff > 40) {
+      // Swiped left -> next
+      nextImage();
+    } else if (diff < -40) {
+      // Swiped right -> prev
+      prevImage();
+    }
+    setTouchStartX(null);
   };
 
   // Format price string matching user screenshot: "€ 522 000" or custom format
@@ -84,10 +103,14 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   return (
     <article
       onClick={() => onSelectProperty(property)}
-      className="bg-white rounded-2xl border border-neutral-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer group"
+      className="bg-white rounded-2xl border border-neutral-200/90 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer group hover:-translate-y-0.5"
     >
-      {/* Photo Carousel Container */}
-      <div className="h-56 sm:h-60 overflow-hidden relative bg-neutral-100 select-none">
+      {/* Photo Carousel Container with Touch Swipe support for smartphones */}
+      <div 
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="h-56 sm:h-60 overflow-hidden relative bg-neutral-100 select-none touch-pan-y"
+      >
         <img
           src={imageList[currentImgIndex]}
           alt={property.title}
@@ -96,16 +119,16 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         />
 
         {/* Top-Right White Badge: "MORADIA" / "APARTAMENTO" */}
-        <div className="absolute top-3.5 right-3.5 bg-white text-neutral-800 text-[11px] font-bold px-3 py-1 rounded-md shadow-xs uppercase tracking-wider">
+        <div className="absolute top-3.5 right-3.5 bg-white/95 backdrop-blur-xs text-neutral-800 text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1 rounded-md shadow-xs uppercase tracking-wider">
           {property.type}
         </div>
 
-        {/* Carousel Previous & Next Arrow Buttons */}
+        {/* Carousel Previous & Next Arrow Buttons with minimum 36px touch hitbox */}
         <button
           type="button"
           onClick={prevImage}
           aria-label="Foto anterior"
-          className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/70 hover:bg-white text-neutral-800 flex items-center justify-center backdrop-blur-xs transition-all shadow-xs active:scale-95 z-10"
+          className="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 hover:bg-white text-neutral-800 flex items-center justify-center backdrop-blur-xs transition-all shadow-sm active:scale-95 z-10"
         >
           <ChevronLeft className="w-5 h-5 -ml-0.5" />
         </button>
@@ -114,7 +137,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           type="button"
           onClick={nextImage}
           aria-label="Próxima foto"
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/70 hover:bg-white text-neutral-800 flex items-center justify-center backdrop-blur-xs transition-all shadow-xs active:scale-95 z-10"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 hover:bg-white text-neutral-800 flex items-center justify-center backdrop-blur-xs transition-all shadow-sm active:scale-95 z-10"
         >
           <ChevronRight className="w-5 h-5 -mr-0.5" />
         </button>
@@ -164,26 +187,26 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </div>
 
           {/* 3-Column Specs Box */}
-          <div className="bg-neutral-50/90 border border-neutral-200/80 rounded-2xl p-2.5 sm:p-3 my-2 grid grid-cols-3 divide-x divide-neutral-200 text-center">
+          <div className="bg-neutral-50/90 border border-neutral-200/80 rounded-2xl p-2 sm:p-3 my-2 grid grid-cols-3 divide-x divide-neutral-200 text-center">
             {/* Column 1: Quartos */}
-            <div className="px-1 flex flex-col items-center justify-center">
-              <Bed className="w-4 h-4 text-neutral-400 mb-0.5" />
-              <span className="text-sm font-bold text-neutral-900">{property.beds}</span>
-              <span className="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">QUARTOS</span>
+            <div className="px-0.5 sm:px-1 flex flex-col items-center justify-center min-w-0">
+              <Bed className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neutral-400 mb-0.5" />
+              <span className="text-xs sm:text-sm font-bold text-neutral-900 truncate">{property.beds}</span>
+              <span className="text-[9px] sm:text-[10px] text-neutral-500 font-semibold uppercase tracking-wider truncate">QUARTOS</span>
             </div>
 
             {/* Column 2: Suítes */}
-            <div className="px-1 flex flex-col items-center justify-center">
-              <Home className="w-4 h-4 text-neutral-400 mb-0.5" />
-              <span className="text-sm font-bold text-neutral-900">{property.baths}</span>
-              <span className="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">SUÍTES</span>
+            <div className="px-0.5 sm:px-1 flex flex-col items-center justify-center min-w-0">
+              <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neutral-400 mb-0.5" />
+              <span className="text-xs sm:text-sm font-bold text-neutral-900 truncate">{property.baths}</span>
+              <span className="text-[9px] sm:text-[10px] text-neutral-500 font-semibold uppercase tracking-wider truncate">SUÍTES</span>
             </div>
 
             {/* Column 3: Área */}
-            <div className="px-1 flex flex-col items-center justify-center">
-              <Maximize className="w-4 h-4 text-neutral-400 mb-0.5" />
-              <span className="text-sm font-bold text-neutral-900">{property.area}m²</span>
-              <span className="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">ÁREA</span>
+            <div className="px-0.5 sm:px-1 flex flex-col items-center justify-center min-w-0">
+              <Maximize className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neutral-400 mb-0.5" />
+              <span className="text-xs sm:text-sm font-bold text-neutral-900 truncate">{property.area}m²</span>
+              <span className="text-[9px] sm:text-[10px] text-neutral-500 font-semibold uppercase tracking-wider truncate">ÁREA</span>
             </div>
           </div>
         </div>
@@ -191,14 +214,14 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         {/* Consultant Exclusive Footer Row */}
         <div className="pt-3 mt-1 border-t border-neutral-100 flex items-center justify-between gap-2">
           {/* Left: Avatar + Consultant Name */}
-          <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
             <img
               src={consultant.avatar}
               alt={consultant.name}
-              className="w-10 h-10 rounded-full object-cover shrink-0 border border-neutral-200 shadow-xs"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover shrink-0 border border-neutral-200 shadow-xs"
             />
             <div className="min-w-0">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 truncate">
+              <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-neutral-400 truncate">
                 CONSULTOR EXCLUSIVO
               </div>
               <div className="text-xs sm:text-sm font-bold text-neutral-900 truncate">
@@ -207,8 +230,8 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
           </div>
 
-          {/* Right: Phone & Email action buttons */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Right: Phone & Email action buttons with >= 44px touch targets on mobile */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
               onClick={(e) => {
@@ -217,7 +240,8 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
                 else window.open(`tel:${consultant.phone}`, '_self');
               }}
               title={`Ligar para ${consultant.name}`}
-              className="w-9 h-9 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer active:scale-95"
+              aria-label={`Ligar para ${consultant.name}`}
+              className="w-10 h-10 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer active:scale-95"
             >
               <Phone className="w-4 h-4" />
             </button>
@@ -229,7 +253,8 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
                 onContactClick(property);
               }}
               title={`Enviar mensagem para ${consultant.name}`}
-              className="w-9 h-9 rounded-xl bg-[#0070f3] hover:bg-[#005bb5] text-white flex items-center justify-center transition-colors cursor-pointer shadow-sm active:scale-95"
+              aria-label={`Enviar mensagem para ${consultant.name}`}
+              className="w-10 h-10 rounded-xl bg-[#0070f3] hover:bg-[#005bb5] text-white flex items-center justify-center transition-colors cursor-pointer shadow-sm active:scale-95"
             >
               <Mail className="w-4 h-4" />
             </button>

@@ -709,6 +709,41 @@ export default function App() {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
+  // Desktop keyboard arrow navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (e.key === 'ArrowRight') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Mobile Touch Swipe for Hero Slider
+  const [heroTouchStartX, setHeroTouchStartX] = useState<number | null>(null);
+
+  const handleHeroTouchStart = (e: React.TouchEvent) => {
+    setHeroTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleHeroTouchEnd = (e: React.TouchEvent) => {
+    if (heroTouchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = heroTouchStartX - touchEndX;
+    if (diff > 45) {
+      nextSlide();
+    } else if (diff < -45) {
+      prevSlide();
+    }
+    setHeroTouchStartX(null);
+  };
+
   const [activePurpose, setActivePurpose] = useState<'Todos' | 'Comprar' | 'Aluguel'>('Todos');
   const [filters, setFilters] = useState({
     location: '',
@@ -1104,10 +1139,14 @@ export default function App() {
         )}
       </header>
 
-      <main className="flex-grow">
+      <main className="flex-grow pb-16 md:pb-0">
         {/* Hero Section with Panoramic Slider & Centered Framing */}
         <section className="relative w-full">
-          <div className="relative w-full h-[540px] xs:h-[600px] sm:h-[500px] md:h-[620px] lg:h-[700px] overflow-hidden bg-neutral-950">
+          <div 
+            onTouchStart={handleHeroTouchStart}
+            onTouchEnd={handleHeroTouchEnd}
+            className="relative w-full h-[540px] xs:h-[600px] sm:h-[500px] md:h-[620px] lg:h-[700px] overflow-hidden bg-neutral-950 select-none touch-pan-y"
+          >
             {heroSlides.map((slide, index) => (
               <div 
                 key={slide.id}
@@ -1252,7 +1291,7 @@ export default function App() {
                       value={filters.location}
                       onChange={(e) => setFilters({...filters, location: e.target.value})}
                       placeholder={t.placeholderLoc}
-                      className="w-full border border-[#e1ebe5] pl-9 pr-3 py-2.5 rounded-xl text-xs sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all"
+                      className="w-full border border-[#e1ebe5] pl-9 pr-3 py-2.5 rounded-xl text-base sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all min-h-[44px]"
                     />
                   </div>
                 </div>
@@ -1265,7 +1304,7 @@ export default function App() {
                     <select 
                       value={filters.type}
                       onChange={(e) => setFilters({...filters, type: e.target.value})}
-                      className="w-full border border-[#e1ebe5] pl-9 pr-8 py-2.5 rounded-xl text-xs sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] appearance-none transition-all cursor-pointer"
+                      className="w-full border border-[#e1ebe5] pl-9 pr-8 py-2.5 rounded-xl text-base sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] appearance-none transition-all cursor-pointer min-h-[44px]"
                     >
                       <option value="Todos">{t.all}</option>
                       <option value="Apartamento">{t.types["Apartamento"]}</option>
@@ -1285,7 +1324,7 @@ export default function App() {
                     <select 
                       value={filters.maxPrice}
                       onChange={(e) => setFilters({...filters, maxPrice: e.target.value})}
-                      className="w-full border border-[#e1ebe5] pl-9 pr-8 py-2.5 rounded-xl text-xs sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] appearance-none transition-all cursor-pointer"
+                      className="w-full border border-[#e1ebe5] pl-9 pr-8 py-2.5 rounded-xl text-base sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] appearance-none transition-all cursor-pointer min-h-[44px]"
                     >
                       <option value="Qualquer">{t.any}</option>
                       {activePurpose === 'Aluguel' ? (
@@ -1312,7 +1351,7 @@ export default function App() {
                 {/* Primary Search Button in Signature Deep Emerald with Amber Search Icon */}
                 <button 
                   onClick={() => document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="bg-gradient-to-r from-[#0c241b] to-[#143729] hover:from-[#091a13] hover:to-[#0c241b] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex justify-center items-center h-[42px] w-full shadow-md hover:shadow-lg cursor-pointer border border-emerald-900/40 group"
+                  className="bg-gradient-to-r from-[#0c241b] to-[#143729] hover:from-[#091a13] hover:to-[#0c241b] text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex justify-center items-center min-h-[44px] w-full shadow-md hover:shadow-lg cursor-pointer border border-emerald-900/40 group active:scale-98"
                 >
                   <Search className="w-4 h-4 mr-2 text-[#f59e0b] group-hover:scale-110 transition-transform" />
                   <span>{t.search}</span>
@@ -1745,14 +1784,19 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Property Details Modal */}
+      {/* Property Details Modal - Responsive Bottom-Sheet on Mobile & Centered Modal on Desktop */}
       {selectedPropertyForModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
             className="fixed inset-0" 
             onClick={() => setSelectedPropertyForModal(null)} 
           />
-          <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto z-10 border border-[#e1ebe5] animate-in zoom-in-95 duration-200">
+          <div className="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto z-10 border border-[#e1ebe5] animate-in slide-in-from-bottom-8 sm:zoom-in-95 duration-200">
+            {/* Mobile Grab Handle */}
+            <div className="sm:hidden pt-3 pb-1 flex justify-center">
+              <div className="w-12 h-1.5 bg-neutral-300 rounded-full" />
+            </div>
+
             {/* Modal Close Button */}
             <button 
               onClick={() => setSelectedPropertyForModal(null)}
@@ -1763,7 +1807,7 @@ export default function App() {
             </button>
 
             {/* Modal Image Header */}
-            <div className="h-64 sm:h-72 w-full overflow-hidden relative">
+            <div className="h-60 sm:h-72 w-full overflow-hidden relative">
               <img 
                 src={selectedPropertyForModal.image} 
                 alt={selectedPropertyForModal.title}
@@ -1777,7 +1821,7 @@ export default function App() {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 sm:p-8">
+            <div className="p-5 sm:p-8">
               <div className="flex justify-between items-baseline gap-4 mb-2">
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#0c241b] tabular-nums">
                   {formatPrice(selectedPropertyForModal.price, selectedPropertyForModal.purpose)}
@@ -1787,7 +1831,7 @@ export default function App() {
                 </span>
               </div>
 
-              <h3 className="text-lg font-bold text-neutral-800 mb-2">
+              <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2">
                 {selectedPropertyForModal.title}
               </h3>
 
@@ -1797,18 +1841,18 @@ export default function App() {
               </div>
 
               {/* Specs Grid */}
-              <div className="grid grid-cols-3 gap-3 p-4 bg-[#f8faf8] border border-[#e1ebe5] rounded-2xl mb-6 text-center text-xs">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 p-3.5 sm:p-4 bg-[#f8faf8] border border-[#e1ebe5] rounded-2xl mb-6 text-center text-xs">
                 <div>
                   <span className="block text-neutral-400 text-[10px] uppercase">Quartos</span>
-                  <span className="font-bold text-[#0c241b] text-sm">{formatBeds(selectedPropertyForModal.beds)}</span>
+                  <span className="font-bold text-[#0c241b] text-xs sm:text-sm">{formatBeds(selectedPropertyForModal.beds)}</span>
                 </div>
                 <div>
                   <span className="block text-neutral-400 text-[10px] uppercase">Casas de Banho</span>
-                  <span className="font-bold text-[#0c241b] text-sm">{selectedPropertyForModal.baths} WCs</span>
+                  <span className="font-bold text-[#0c241b] text-xs sm:text-sm">{selectedPropertyForModal.baths} WCs</span>
                 </div>
                 <div>
                   <span className="block text-neutral-400 text-[10px] uppercase">Área Bruta</span>
-                  <span className="font-bold text-[#0c241b] text-sm">{selectedPropertyForModal.area} m²</span>
+                  <span className="font-bold text-[#0c241b] text-xs sm:text-sm">{selectedPropertyForModal.area} m²</span>
                 </div>
               </div>
 
@@ -1842,7 +1886,7 @@ export default function App() {
                     setSelectedPropertyForModal(null);
                     sendWhatsAppMessage(prop);
                   }}
-                  className="w-full py-3 bg-[#10b981] hover:bg-[#059669] text-white rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors"
+                  className="w-full py-3.5 bg-[#10b981] hover:bg-[#059669] text-white rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors min-h-[44px]"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>WhatsApp com Consultor</span>
@@ -1853,7 +1897,7 @@ export default function App() {
                     setSelectedPropertyForModal(null);
                     setIsContactModalOpen(true);
                   }}
-                  className="w-full py-3 bg-[#0c241b] hover:bg-[#071711] text-white rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs border border-emerald-900/40 transition-colors"
+                  className="w-full py-3.5 bg-[#0c241b] hover:bg-[#071711] text-white rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs border border-emerald-900/40 transition-colors min-h-[44px]"
                 >
                   <Calendar className="w-4 h-4 text-[#f59e0b]" />
                   <span>{t.scheduleVisit}</span>
@@ -1864,17 +1908,22 @@ export default function App() {
         </div>
       )}
 
-      {/* Contact / Consultation Modal */}
+      {/* Contact / Consultation Modal - Responsive Bottom-Sheet on Mobile & Centered Modal on Desktop */}
       {isContactModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
             className="fixed inset-0" 
             onClick={() => setIsContactModalOpen(false)} 
           />
-          <div className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 z-10 border border-[#e1ebe5] animate-in zoom-in-95 duration-200">
+          <div className="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8 z-10 border border-[#e1ebe5] animate-in slide-in-from-bottom-8 sm:zoom-in-95 duration-200">
+            {/* Mobile Grab Handle */}
+            <div className="sm:hidden pt-1 pb-3 flex justify-center">
+              <div className="w-12 h-1.5 bg-neutral-300 rounded-full" />
+            </div>
+
             <button 
               onClick={() => setIsContactModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer"
               aria-label="Fechar"
             >
               <X className="w-5 h-5" />
@@ -1885,10 +1934,10 @@ export default function App() {
               {t.directContact}
             </span>
 
-            <h3 className="text-2xl font-serif text-neutral-900 mb-1">
+            <h3 className="text-xl sm:text-2xl font-serif text-neutral-900 mb-1">
               {t.modalTitle}
             </h3>
-            <p className="text-xs text-neutral-500 mb-6 leading-relaxed">
+            <p className="text-xs text-neutral-500 mb-5 leading-relaxed">
               {t.modalSubtitle}
             </p>
 
@@ -1911,11 +1960,11 @@ export default function App() {
                     type="text" 
                     required 
                     placeholder="Ex: Manuel dos Santos"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-xs sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-base sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all min-h-[44px]"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-[11px] font-semibold text-neutral-600 uppercase tracking-wider mb-1.5">
                       {t.emailLabel}
@@ -1924,7 +1973,7 @@ export default function App() {
                       type="email" 
                       required 
                       placeholder="manuel@exemplo.ao"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-xs sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-base sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all min-h-[44px]"
                     />
                   </div>
                   <div>
@@ -1934,7 +1983,7 @@ export default function App() {
                     <input 
                       type="tel" 
                       placeholder="+244 923 000 000"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-xs sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-base sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all min-h-[44px]"
                     />
                   </div>
                 </div>
@@ -1946,19 +1995,19 @@ export default function App() {
                   <textarea 
                     rows={3} 
                     placeholder={t.messagePlaceholder}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-xs sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#e1ebe5] text-base sm:text-sm bg-[#f8faf8] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#10b981]/30 focus:border-[#10b981] transition-all resize-none"
                   />
                 </div>
 
                 <button 
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-[#0c241b] hover:bg-[#071711] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-2 border border-emerald-900/40"
+                  className="w-full py-3.5 rounded-xl bg-[#0c241b] hover:bg-[#071711] text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-2 border border-emerald-900/40 min-h-[44px]"
                 >
                   <span>{t.sendBtn}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-[#10b981]" />
                 </button>
 
-                <div className="pt-2 border-t border-[#e1ebe5] flex items-center justify-between text-[11px] text-neutral-400">
+                <div className="pt-2 border-t border-[#e1ebe5] flex flex-wrap items-center justify-between text-[11px] text-neutral-400 gap-2">
                   <span className="flex items-center gap-1.5">
                     <Phone className="w-3 h-3 text-[#f59e0b]" /> +244 923 000 000
                   </span>
@@ -1977,6 +2026,69 @@ export default function App() {
 
       {/* Floating Blue Circle: Chat / Contact Button (Bottom-Right) */}
       <ChatFloatingButton onClick={() => setIsContactModalOpen(true)} />
+
+      {/* Mobile Bottom Navigation Bar (Optimized for Phone Ergonomics) */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-md border-t border-[#e1ebe5] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom,0px)]">
+        <div className="grid grid-cols-5 h-16 items-center px-1">
+          <button
+            type="button"
+            onClick={() => {
+              clearFilters();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="flex flex-col items-center justify-center py-1 text-neutral-600 hover:text-[#0c241b] active:scale-95 transition-all cursor-pointer min-h-[44px]"
+          >
+            <Home className="w-5 h-5 mb-0.5 text-[#0c241b]" />
+            <span className="text-[10px] font-semibold tracking-tight">Início</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setViewMode('list');
+              document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer active:scale-95 min-h-[44px] ${
+              viewMode === 'list' ? 'text-[#0c241b] font-bold' : 'text-neutral-500 hover:text-[#0c241b]'
+            }`}
+          >
+            <LayoutGrid className={`w-5 h-5 mb-0.5 ${viewMode === 'list' ? 'text-[#10b981]' : 'text-neutral-500'}`} />
+            <span className="text-[10px] tracking-tight">Catálogo</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setViewMode('map');
+              document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer active:scale-95 min-h-[44px] ${
+              viewMode === 'map' ? 'text-[#0c241b] font-bold' : 'text-neutral-500 hover:text-[#0c241b]'
+            }`}
+          >
+            <Map className={`w-5 h-5 mb-0.5 ${viewMode === 'map' ? 'text-[#10b981]' : 'text-neutral-500'}`} />
+            <span className="text-[10px] tracking-tight">Mapa</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById('simulador')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex flex-col items-center justify-center py-1 text-neutral-500 hover:text-[#0c241b] active:scale-95 transition-all cursor-pointer min-h-[44px]"
+          >
+            <Calculator className="w-5 h-5 mb-0.5 text-neutral-500" />
+            <span className="text-[10px] tracking-tight font-medium">Crédito</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsContactModalOpen(true)}
+            className="flex flex-col items-center justify-center py-1 text-[#0c241b] active:scale-95 transition-all cursor-pointer min-h-[44px]"
+          >
+            <div className="w-7 h-7 rounded-full bg-[#0c241b] text-white flex items-center justify-center shadow-xs -mt-1 border border-emerald-900/40">
+              <Phone className="w-3.5 h-3.5 text-[#f59e0b]" />
+            </div>
+            <span className="text-[10px] font-bold tracking-tight text-[#0c241b]">Contacto</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }

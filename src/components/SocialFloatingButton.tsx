@@ -78,13 +78,7 @@ export const SocialFloatingButton: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      style={{
-        position: 'fixed',
-        bottom: '24px',
-        left: '24px',
-        zIndex: 99999,
-      }}
-      className="flex flex-col items-start select-none print:hidden pointer-events-auto"
+      className="fixed bottom-20 sm:bottom-6 left-4 sm:left-6 z-50 flex flex-col items-start select-none print:hidden pointer-events-auto"
       aria-label="Redes Sociais"
     >
       {/* Vertical Stack of Social Media Icons (opening upwards as in user image 3) */}
