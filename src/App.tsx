@@ -47,8 +47,8 @@ interface HeroSlideItem {
 const heroSlides: HeroSlideItem[] = [
   {
     id: 1,
-    image: "/assets/aistudio/kilamba_b379e1ec.jpg",
-    mobileImage: "/assets/aistudio/kilamba_b379e1ec.jpg",
+    image: "/assets/aistudio/pc_611b0536.jpg",
+    mobileImage: "/assets/aistudio/mobile_68ce2701.jpg",
     tag: "DOMORA Empreendimentos",
     title: "Mais que imóveis, são sonhos.",
     subtitle: "Centralidade do Kilamba · Luanda, Angola",
@@ -58,6 +58,17 @@ const heroSlides: HeroSlideItem[] = [
   },
   {
     id: 2,
+    image: "/assets/aistudio/kilamba_b379e1ec.jpg",
+    mobileImage: "/assets/aistudio/kilamba_b379e1ec.jpg",
+    tag: "DOMORA Kilamba Sul",
+    title: "Mais que imóveis, são sonhos.",
+    subtitle: "Centralidade do Kilamba · Luanda, Angola",
+    showOverlayText: false,
+    positionClass: "object-center",
+    mobilePositionClass: "object-cover object-center"
+  },
+  {
+    id: 3,
     image: "/assets/aistudio/slide02_a70c3e55.jpg",
     mobileImage: "/assets/aistudio/slide02_t_bce57f33.jpg",
     tag: "DOMORA Talatona",
@@ -68,7 +79,7 @@ const heroSlides: HeroSlideItem[] = [
     mobilePositionClass: "object-cover object-top"
   },
   {
-    id: 3,
+    id: 4,
     image: "/assets/aistudio/slide03_2595f4e0.jpg",
     mobileImage: "/assets/aistudio/slide03_t_35dd9d4f.jpg",
     tag: "DOMORA Mutamba",
@@ -414,11 +425,12 @@ const initialProperties: Property[] = [
     type: "Apartamento", 
     location: "Quarteirão W, Centralidade do Kilamba", 
     zone: "Kilamba",
-    image: "/assets/aistudio/kilamba_b379e1ec.jpg",
+    image: "/assets/aistudio/pc_611b0536.jpg",
     images: [
+      "/assets/aistudio/pc_611b0536.jpg",
+      "/assets/aistudio/mobile_68ce2701.jpg",
       "/assets/aistudio/kilamba_b379e1ec.jpg",
-      "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1502672260266-1c1e52509def?auto=format&fit=crop&w=800&q=80"
+      "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&w=800&q=80"
     ],
     description: "Excelente apartamento T3 com acabamentos de qualidade, sala ampla em dois ambientes, cozinha mobilada, suíte master e varanda arejada com vista desimpedida sobre os jardins do Kilamba. Documentação regularizada para escritura imediata.",
     amenities: ["Gerador de Emergência", "Tanque de Água / EPAL", "Segurança 24h", "Elevadores Operacionais", "Estacionamento Privado", "Varanda com Vista"]
@@ -648,7 +660,7 @@ const neighborhoodHighlights = [
     description: "A maior e mais emblemática centralidade de Angola, com edifícios modernos, parques, escolas e infraestruturas urbanas completas.",
     avgPriceBuy: "25M Kz – 60M Kz",
     avgPriceRent: "300K Kz – 600K Kz",
-    image: "/assets/aistudio/kilamba_b379e1ec.jpg",
+    image: "/assets/aistudio/pc_611b0536.jpg",
   },
   {
     name: "Talatona & Belas",
