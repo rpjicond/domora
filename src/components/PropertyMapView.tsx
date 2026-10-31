@@ -52,6 +52,10 @@ const PROPERTY_COORDS: Record<number, { x: number; y: number }> = {
   13: { x: 76, y: 75 }, // Kilamba Bloco H
   14: { x: 38, y: 26 }, // Baixa de Luanda Penthouse
   15: { x: 36, y: 53 }, // Morro Bento T2
+  101: { x: 44, y: 62 }, // Talatona Prime
+  102: { x: 49, y: 24 }, // Miramar Diplomático
+  103: { x: 36, y: 84 }, // Belas Residence
+  104: { x: 28, y: 19 }, // Ilha de Luanda Baía
 };
 
 // Fallback coordinate generator if new property added

@@ -83,20 +83,20 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
     setTouchStartX(null);
   };
 
-  // Format price string matching user screenshot: "€ 522 000" or custom format
+  // Format price string in Angolan Kwanza (Kz) or custom format
   const displayPrice = () => {
     if (formatPrice) {
       return formatPrice(property.price, property.purpose);
     }
-    const curr = property.currency || '€';
-    const numFormatted = property.price.toLocaleString('pt-PT');
-    return `${curr} ${numFormatted}`;
+    const numFormatted = property.price.toLocaleString('pt-AO');
+    const curr = property.currency || 'Kz';
+    return `${numFormatted} ${curr}`;
   };
 
   const consultant: Consultant = property.consultant || {
     name: 'Ana Martins',
-    phone: '+351 912 345 678',
-    email: 'ana.martins@domora.com',
+    phone: '+244 923 456 789',
+    email: 'ana.martins@domora.ao',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
   };
 
@@ -161,27 +161,27 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
       <div className="p-4 sm:p-5 flex flex-col justify-between flex-grow">
         <div>
           {/* Small Pill Badge: PREÇO DE VENDA */}
-          <div className="mb-2">
-            <span className="bg-neutral-100 text-neutral-600 text-[11px] font-semibold px-2.5 py-1 rounded-md inline-block uppercase tracking-wider">
+          <div className="mb-1.5">
+            <span className="bg-neutral-100 text-neutral-600 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md inline-block uppercase tracking-wider">
               {property.purpose === 'Aluguel' ? 'VALOR DE ALUGUEL' : 'PREÇO DE VENDA'}
             </span>
           </div>
 
-          {/* Big Bold Price */}
-          <div className="text-2xl font-bold text-neutral-900 tracking-tight tabular-nums mb-1">
+          {/* Bold Price */}
+          <div className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight tabular-nums mb-1">
             {displayPrice()}
           </div>
 
           {/* Title in DOMORA dark emerald green, hovering to emerald */}
           <h3 
-            className="text-base font-bold text-[#0c241b] group-hover:text-[#10b981] transition-colors leading-snug line-clamp-1 mb-1.5"
+            className="text-sm sm:text-base font-bold text-[#0c241b] group-hover:text-[#10b981] transition-colors leading-snug line-clamp-1 mb-1"
             title={property.title}
           >
             {property.title}
           </h3>
 
           {/* Location */}
-          <div className="flex items-center gap-1.5 text-xs text-neutral-500 mb-3">
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-neutral-500 mb-2.5">
             <MapPin className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
             <span className="truncate">{property.location}</span>
           </div>

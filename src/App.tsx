@@ -47,14 +47,14 @@ interface HeroSlideItem {
 const heroSlides: HeroSlideItem[] = [
   {
     id: 1,
-    image: "/assets/aistudio/slide01_d5ea7762.png",
-    mobileImage: "/assets/aistudio/slide01_t_29bf9524.png",
+    image: "/assets/aistudio/kilamba_b379e1ec.jpg",
+    mobileImage: "/assets/aistudio/kilamba_b379e1ec.jpg",
     tag: "DOMORA Empreendimentos",
     title: "Mais que imóveis, são sonhos.",
     subtitle: "Centralidade do Kilamba · Luanda, Angola",
     showOverlayText: false,
-    positionClass: "object-[32%_center] sm:object-center",
-    mobilePositionClass: "object-cover object-top"
+    positionClass: "object-center",
+    mobilePositionClass: "object-cover object-center"
   },
   {
     id: 2,
@@ -121,18 +121,18 @@ const translations = {
     bath: "WC",
     bathsPlural: "WCs",
     studio: "Estúdio / T0",
-    placeholderLoc: "Chiado, Cascais, Sintra, Kilamba, Talatona...",
+    placeholderLoc: "Talatona, Kilamba, Miramar, Ilha de Luanda, Nova Vida...",
     modalTitle: "Fale com a DOMORA",
-    modalSubtitle: "A nossa equipa está ao seu dispor para visitas presenciais, esclarecimento jurídico e apoio no financiamento.",
+    modalSubtitle: "A nossa equipa em Luanda está ao seu dispor para visitas presenciais, esclarecimento jurídico e apoio no financiamento bancário.",
     nameLabel: "Nome Completo",
     emailLabel: "Endereço de Email",
-    phoneLabel: "Contacto Telefónico (+244 / +351)",
+    phoneLabel: "Contacto Telefónico (+244)",
     messageLabel: "Mensagem ou Imóvel de Interesse",
     messagePlaceholder: "Indique o imóvel pretendido ou as suas preferências...",
     sendBtn: "Enviar Pedido de Contacto",
     sentSuccess: "Pedido recebido com sucesso! Um consultor entrará em contacto brevemente.",
     directContact: "Atendimento Personalizado",
-    address: "Avenidas Novas, Lisboa / Kilamba, Luanda",
+    address: "Centralidade do Kilamba / Talatona, Luanda - Angola",
     scheduleVisit: "Agendar Visita",
     viewDetails: "Ver Detalhes",
     whatsAppChat: "Falar no WhatsApp",
@@ -294,15 +294,15 @@ const initialProperties: Property[] = [
   { 
     id: 101, 
     purpose: "Comprar", 
-    price: 450000, 
-    currency: "€",
-    title: "Apartamento Exclusivo em Chiado - Prédio 1", 
-    area: 45, 
-    beds: 1, 
-    baths: 1, 
+    price: 145000000, 
+    currency: "Kz",
+    title: "Apartamento Executivo em Talatona - Torre Prime", 
+    area: 165, 
+    beds: 3, 
+    baths: 3, 
     type: "Apartamento", 
-    location: "Chiado, Lisboa", 
-    zone: "Chiado",
+    location: "Via C3, Talatona, Luanda", 
+    zone: "Talatona",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
     images: [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
@@ -310,27 +310,27 @@ const initialProperties: Property[] = [
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80"
     ],
-    description: "Apartamento exclusivo no coração histórico do Chiado, com acabamentos premium, luz natural abundante e arquitetura contemporânea em condomínio de prestígio.",
-    amenities: ["Varanda Panorâmica", "Cozinha Equipada", "Ar Condicionado", "Elevador", "Garagem Privativa"],
+    description: "Apartamento executivo de alto padrão no coração nobre de Talatona, com acabamentos premium, luz natural abundante e segurança 24h em condomínio fechado com piscina.",
+    amenities: ["Varanda Panorâmica", "Piscina do Condomínio", "Gerador 24/7", "Elevadores com Backup", "2 Vagas na Garagem"],
     consultant: {
       name: "Ana Martins",
-      phone: "+351 912 345 678",
-      email: "ana.martins@domora.com",
+      phone: "+244 923 456 789",
+      email: "ana.martins@domora.ao",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
     }
   },
   { 
     id: 102, 
     purpose: "Comprar", 
-    price: 522000, 
-    currency: "€",
-    title: "Moradia Exclusivo em Avenidas Novas - Prédio 2", 
-    area: 57, 
-    beds: 2, 
-    baths: 2, 
+    price: 385000000, 
+    currency: "Kz",
+    title: "Moradia Contemporânea em Miramar - Condomínio Diplomático", 
+    area: 420, 
+    beds: 4, 
+    baths: 5, 
     type: "Moradia", 
-    location: "Avenidas Novas, Lisboa", 
-    zone: "Avenidas Novas",
+    location: "Miramar, Luanda", 
+    zone: "Miramar",
     image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
     images: [
       "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
@@ -338,27 +338,27 @@ const initialProperties: Property[] = [
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
     ],
-    description: "Moradia de prestígio com piscina privativa, design minimalista e amplos vãos envidraçados. Perfeita harmonia entre interior e exterior com acabamentos de luxo.",
-    amenities: ["Piscina Privada", "Terraço Solário", "Suíte Master", "Garagem para 2 Carros", "Segurança 24h"],
+    description: "Moradia de prestígio no bairro consular de Miramar com piscina privativa, design minimalista e amplos vãos envidraçados. Harmonia perfeita com jardim e segurança reforçada.",
+    amenities: ["Piscina Privada", "Terraço Solário", "Suíte Master", "Garagem para 3 Carros", "Gerador Industrial 60kVA"],
     consultant: {
       name: "Ana Martins",
-      phone: "+351 912 345 678",
-      email: "ana.martins@domora.com",
+      phone: "+244 923 456 789",
+      email: "ana.martins@domora.ao",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
     }
   },
   { 
     id: 103, 
     purpose: "Comprar", 
-    price: 594000, 
-    currency: "€",
-    title: "Moradia Exclusivo em Belém - Prédio 3", 
-    area: 69, 
-    beds: 3, 
-    baths: 3, 
+    price: 290000000, 
+    currency: "Kz",
+    title: "Moradia V4 de Luxo no Condomínio Belas Business & Residence", 
+    area: 380, 
+    beds: 4, 
+    baths: 4, 
     type: "Moradia", 
-    location: "Belém, Lisboa", 
-    zone: "Belém",
+    location: "Belas / Talatona Sul, Luanda", 
+    zone: "Belas",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
     images: [
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
@@ -366,27 +366,27 @@ const initialProperties: Property[] = [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
     ],
-    description: "Moradia exclusiva em zona nobre de Belém, integrada em jardim paisagístico com iluminação noturna cênica e áreas sociais de alto conforto.",
-    amenities: ["Jardim Iluminado", "3 Suítes", "Churrasqueira Gourmet", "Domótica Integrada", "Painéis Solares"],
+    description: "Moradia exclusiva em zona nobre de Belas, integrada em jardim paisagístico com iluminação noturna cênica, áreas sociais de alto conforto e clube privativo.",
+    amenities: ["Jardim Iluminado", "4 Suítes", "Churrasqueira Gourmet", "Clube Privativo", "Tanque de Água 20.000L"],
     consultant: {
       name: "Ana Martins",
-      phone: "+351 912 345 678",
-      email: "ana.martins@domora.com",
+      phone: "+244 923 456 789",
+      email: "ana.martins@domora.ao",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
     }
   },
   { 
     id: 104, 
     purpose: "Comprar", 
-    price: 666000, 
-    currency: "€",
-    title: "Apartamento Exclusivo em Cascais - Prédio 4", 
-    area: 81, 
-    beds: 4, 
-    baths: 4, 
+    price: 210000000, 
+    currency: "Kz",
+    title: "Apartamento Frontal na Ilha de Luanda - Baía Residence", 
+    area: 195, 
+    beds: 3, 
+    baths: 3, 
     type: "Apartamento", 
-    location: "Cascais", 
-    zone: "Cascais",
+    location: "Avenida Murtala Mohamed, Ilha de Luanda", 
+    zone: "Ilha de Luanda",
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
     images: [
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
@@ -394,12 +394,12 @@ const initialProperties: Property[] = [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
     ],
-    description: "Apartamento deslumbrante em Cascais com vista desafogada, piscina exterior privativa do condomínio e acesso pedestre à praia.",
-    amenities: ["Piscina & Solário", "4 Quartos Suíte", "Box Fechada", "Ar Condicionado", "Portaria 24h"],
+    description: "Apartamento deslumbrante na Ilha de Luanda com vista mar desafogada, piscina exterior privativa do condomínio no rooftop e acesso pedestre à orla marítima.",
+    amenities: ["Rooftop com Piscina", "3 Quartos Suíte", "Box Fechada", "Ar Condicionado", "Portaria Armada 24h"],
     consultant: {
       name: "Ana Martins",
-      phone: "+351 912 345 678",
-      email: "ana.martins@domora.com",
+      phone: "+244 923 456 789",
+      email: "ana.martins@domora.ao",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80"
     }
   },
@@ -414,7 +414,12 @@ const initialProperties: Property[] = [
     type: "Apartamento", 
     location: "Quarteirão W, Centralidade do Kilamba", 
     zone: "Kilamba",
-    image: "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&w=800&q=80",
+    image: "/assets/aistudio/kilamba_b379e1ec.jpg",
+    images: [
+      "/assets/aistudio/kilamba_b379e1ec.jpg",
+      "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1e52509def?auto=format&fit=crop&w=800&q=80"
+    ],
     description: "Excelente apartamento T3 com acabamentos de qualidade, sala ampla em dois ambientes, cozinha mobilada, suíte master e varanda arejada com vista desimpedida sobre os jardins do Kilamba. Documentação regularizada para escritura imediata.",
     amenities: ["Gerador de Emergência", "Tanque de Água / EPAL", "Segurança 24h", "Elevadores Operacionais", "Estacionamento Privado", "Varanda com Vista"]
   },
@@ -631,42 +636,46 @@ const initialProperties: Property[] = [
 ];
 
 const formatPrice = (price: number, purpose: 'Comprar' | 'Aluguel' = 'Comprar') => {
-  // If price is in Euro range (<= 2,000,000), format with € and space separator matching screenshot: "€ 522 000"
-  if (price <= 2000000) {
-    const formatted = `€ ${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}`;
-    return purpose === 'Aluguel' ? `${formatted} / mês` : formatted;
-  }
   const formatted = `${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} Kz`;
   return purpose === 'Aluguel' ? `${formatted} / mês` : formatted;
 };
 
 const neighborhoodHighlights = [
   {
-    name: "Chiado & Baixa",
-    tag: "CORAÇÃO HISTÓRICO",
-    zone: "Chiado",
-    description: "Explore bairros com estilos de vida únicos, desde o charme histórico e cultural aos cafés e teatros emblemáticos.",
-    avgPriceBuy: "€ 450K – € 1.2M",
-    avgPriceRent: "€ 1.8K – € 3.5K",
+    name: "Centralidade do Kilamba",
+    tag: "CIDADE DO FUTURO",
+    zone: "Kilamba",
+    description: "A maior e mais emblemática centralidade de Angola, com edifícios modernos, parques, escolas e infraestruturas urbanas completas.",
+    avgPriceBuy: "25M Kz – 60M Kz",
+    avgPriceRent: "300K Kz – 600K Kz",
+    image: "/assets/aistudio/kilamba_b379e1ec.jpg",
+  },
+  {
+    name: "Talatona & Belas",
+    tag: "POLO EMPRESARIAL & LUXO",
+    zone: "Talatona",
+    description: "Condomínios fechados de prestígio, proximidade a colégios internacionais, centros empresariais e segurança armada 24h.",
+    avgPriceBuy: "120M Kz – 650M Kz",
+    avgPriceRent: "1.2M Kz – 3.5M Kz",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
   },
   {
-    name: "Cascais & Estoril",
-    tag: "LUXO À BEIRA-MAR",
-    zone: "Cascais",
-    description: "Villas exclusivas à beira-mar, marinas de renome internacional, campos de golfe e pores do sol espetaculares.",
-    avgPriceBuy: "€ 660K – € 3.2M",
-    avgPriceRent: "€ 2.5K – € 6K",
-    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+    name: "Ilha de Luanda & Baía",
+    tag: "VISTA MAR & VIDA COSTEIRA",
+    zone: "Ilha de Luanda",
+    description: "Empreendimentos contemporâneos com vistas deslumbrantes para o Oceano Atlântico e a Baía de Luanda, gastronomia e marinas exclusivas.",
+    avgPriceBuy: "180M Kz – 850M Kz",
+    avgPriceRent: "1.5M Kz – 4.5M Kz",
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
   },
   {
-    name: "Sintra",
-    tag: "REFÚGIO DA REALEZA",
-    zone: "Sintra",
-    description: "Palácios rodeados pela natureza luxuriante da serra, privacidade absoluta e refúgios aristocráticos de grande prestígio.",
-    avgPriceBuy: "€ 590K – € 2.8M",
-    avgPriceRent: "€ 2K – € 5K",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+    name: "Miramar & Alvalade",
+    tag: "ZONA DIPLOMÁTICA & HISTÓRICA",
+    zone: "Miramar",
+    description: "Bairro nobre tradicional com representações diplomáticas, ruas arborizadas tranquilas e moradias senhoriais de alto padrão.",
+    avgPriceBuy: "250M Kz – 950M Kz",
+    avgPriceRent: "2.0M Kz – 5.0M Kz",
+    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
   }
 ];
 
@@ -1214,7 +1223,7 @@ export default function App() {
                 <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-[#5eead4] mb-2">
                   {heroSlides[currentSlide]?.tag}
                 </span>
-                <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-md text-balance">
+                <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-md text-balance">
                   {heroSlides[currentSlide]?.title}
                 </h1>
                 <p className="mt-2 text-xs sm:text-sm text-neutral-200 font-light">
@@ -1383,7 +1392,7 @@ export default function App() {
         {/* Prestigious Neighborhoods (Descubra as Melhores Zonas) */}
         <section id="zonas" className="max-w-6xl mx-auto px-4 sm:px-6 py-16 scroll-mt-24">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0c241b] tracking-tight mb-2.5">
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-[#0c241b] tracking-tight mb-2">
               {t.featuredZonesTitle}
             </h2>
             <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed max-w-2xl mx-auto">
@@ -1391,7 +1400,7 @@ export default function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {neighborhoodHighlights.map((zoneItem) => (
               <div 
                 key={zoneItem.name}
@@ -1409,7 +1418,7 @@ export default function App() {
                   <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-300 block mb-1 drop-shadow-sm">
                     {zoneItem.tag}
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
+                  <h3 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
                     {zoneItem.name}
                   </h3>
                 </div>
@@ -1422,7 +1431,7 @@ export default function App() {
         <section id="listings" className="max-w-6xl mx-auto px-4 sm:px-6 py-8 scroll-mt-24">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 mb-6">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0c241b] tracking-tight">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0c241b] tracking-tight">
                 {showOnlyFavorites 
                   ? `Imóveis Favoritos (${filteredProperties.length})` 
                   : t.portfolioTitle}
@@ -1523,7 +1532,7 @@ export default function App() {
                     setIsContactModalOpen(true);
                   }}
                   onCallClick={(p) => {
-                    window.location.href = `tel:${p.consultant?.phone || '+351912345678'}`;
+                    window.location.href = `tel:${p.consultant?.phone || '+244923000000'}`;
                   }}
                   formatPrice={formatPrice}
                 />
@@ -1540,7 +1549,7 @@ export default function App() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
                 Crédito & Aquisição
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mt-1">
+              <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-neutral-900 mt-1">
                 {t.financingSimulator}
               </h2>
               <p className="text-xs sm:text-sm text-neutral-500 mt-1">
@@ -1634,7 +1643,7 @@ export default function App() {
                       Kwanza (Kz)
                     </span>
                   </div>
-                  <div className="text-3xl sm:text-4xl font-extrabold tracking-tight tabular-nums text-[#f59e0b] drop-shadow-[0_2px_8px_rgba(245,158,11,0.35)] mb-4">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight tabular-nums text-[#f59e0b] drop-shadow-[0_2px_8px_rgba(245,158,11,0.35)] mb-4">
                     {formatPrice(calculatedFinancing.monthlyPayment, 'Comprar')}
                     <span className="text-xs font-normal text-emerald-200 block mt-0.5">/ mês</span>
                   </div>
@@ -1674,7 +1683,7 @@ export default function App() {
               <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
               Garantia e Segurança
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mt-1">
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-neutral-900 mt-1">
               Porquê Comprar ou Alugar com a DOMORA
             </h2>
           </div>
@@ -1823,7 +1832,7 @@ export default function App() {
             {/* Modal Content */}
             <div className="p-5 sm:p-8">
               <div className="flex justify-between items-baseline gap-4 mb-2">
-                <div className="text-2xl sm:text-3xl font-extrabold text-[#0c241b] tabular-nums">
+                <div className="text-xl sm:text-3xl font-extrabold text-[#0c241b] tabular-nums">
                   {formatPrice(selectedPropertyForModal.price, selectedPropertyForModal.purpose)}
                 </div>
                 <span className="text-xs font-semibold text-[#0c241b] bg-[#f0f6f3] border border-[#e1ebe5] px-2.5 py-1 rounded-md">
@@ -1831,7 +1840,7 @@ export default function App() {
                 </span>
               </div>
 
-              <h3 className="text-base sm:text-lg font-bold text-neutral-800 mb-2">
+              <h3 className="text-sm sm:text-lg font-bold text-neutral-800 mb-1.5">
                 {selectedPropertyForModal.title}
               </h3>
 
