@@ -11,6 +11,7 @@ import { SocialFloatingButton } from './components/SocialFloatingButton';
 import { ChatFloatingButton } from './components/ChatFloatingButton';
 import { PropertyMapView } from './components/PropertyMapView';
 import { PropertyCard, Consultant } from './components/PropertyCard';
+import { MobileSideDrawer } from './components/MobileSideDrawer';
 
 interface Property {
   id: number;
@@ -707,6 +708,7 @@ export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [selectedPropertyForModal, setSelectedPropertyForModal] = useState<Property | null>(null);
   const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [contactSubject, setContactSubject] = useState<string>('');
   const [lang, setLang] = useState<Language>('PT');
   const [favorites, setFavorites] = useState<number[]>([]);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
@@ -1072,102 +1074,42 @@ export default function App() {
             </div>
             <button 
               className="p-2 rounded-lg bg-[#f0f6f3] text-neutral-800 hover:bg-[#e1ebe5] transition-colors cursor-pointer" 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setIsMenuOpen(true)}
               aria-label="Menu"
             >
-              {isMenuOpen ? <X className="w-5 h-5 text-[#0c241b]" /> : <Menu className="w-5 h-5 text-[#0c241b]" />}
+              <Menu className="w-5 h-5 text-[#0c241b]" />
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-[#e1ebe5] bg-white px-4 py-4 shadow-xl flex flex-col gap-2 animate-in slide-in-from-top-2 duration-200">
-            <button 
-              onClick={() => {
-                filterByPurpose('Comprar');
-                setIsMenuOpen(false);
-                document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className={`text-left text-sm font-semibold py-2.5 px-3 rounded-lg flex items-center justify-between ${
-                activePurpose === 'Comprar' ? 'text-[#0c241b] bg-[#0c241b]/10 font-bold border-l-2 border-[#10b981]' : 'text-neutral-800 hover:bg-[#f0f6f3]'
-              }`}
-            >
-              <span>{t.buy}</span>
-              <ArrowRight className="w-4 h-4 text-[#10b981]" />
-            </button>
-            <button 
-              onClick={() => {
-                filterByPurpose('Aluguel');
-                setIsMenuOpen(false);
-                document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className={`text-left text-sm font-semibold py-2.5 px-3 rounded-lg flex items-center justify-between ${
-                activePurpose === 'Aluguel' ? 'text-[#0c241b] bg-[#0c241b]/10 font-bold border-l-2 border-[#10b981]' : 'text-neutral-800 hover:bg-[#f0f6f3]'
-              }`}
-            >
-              <span>{t.rent}</span>
-              <ArrowRight className="w-4 h-4 text-[#10b981]" />
-            </button>
-            <button 
-              onClick={() => {
-                setIsMenuOpen(false);
-                document.getElementById('zonas')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="text-left text-sm font-semibold py-2.5 px-3 rounded-lg text-neutral-800 hover:bg-[#f0f6f3] flex items-center justify-between"
-            >
-              <span>{t.zones}</span>
-              <ArrowRight className="w-4 h-4 text-[#10b981]" />
-            </button>
-            <button 
-              onClick={() => {
-                setViewMode('map');
-                setIsMenuOpen(false);
-                document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="text-left text-sm font-semibold py-2.5 px-3 rounded-lg text-neutral-800 hover:bg-[#f0f6f3] flex items-center justify-between"
-            >
-              <span className="flex items-center gap-2">
-                <Map className="w-4 h-4 text-[#f59e0b]" />
-                <span>{t.mapView}</span>
-              </span>
-              <ArrowRight className="w-4 h-4 text-[#10b981]" />
-            </button>
-            <button 
-              onClick={() => {
-                setIsMenuOpen(false);
-                document.getElementById('simulador')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="text-left text-sm font-semibold py-2.5 px-3 rounded-lg text-neutral-800 hover:bg-[#f0f6f3] flex items-center justify-between"
-            >
-              <span>{t.simulator}</span>
-              <ArrowRight className="w-4 h-4 text-[#10b981]" />
-            </button>
-            
-            <div className="pt-2 grid grid-cols-2 gap-2">
-              <button 
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  setIsContactModalOpen(true);
-                }}
-                className="w-full py-3 bg-[#0c241b] hover:bg-[#071711] text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer border border-emerald-900/40"
-              >
-                <Phone className="w-3.5 h-3.5 text-[#f59e0b]" />
-                <span>{t.contact}</span>
-              </button>
-              <button 
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  sendWhatsAppMessage();
-                }}
-                className="w-full py-3 bg-[#10b981] hover:bg-[#059669] text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <MessageCircle className="w-3.5 h-3.5" />
-                <span>WhatsApp</span>
-              </button>
-            </div>
-          </div>
-        )}
+        {/* Mobile Navigation Drawer - Side-drawer matching user Bien'ici screenshots */}
+        <MobileSideDrawer
+          isOpen={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
+          favoritesCount={favorites.length}
+          language={lang}
+          onNavigateHome={() => {
+            clearFilters();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onNavigateSearch={() => {
+            document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onShowFavorites={() => {
+            setShowOnlyFavorites(true);
+            document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onOpenContact={(subject) => {
+            if (subject) setContactSubject(subject);
+            setIsContactModalOpen(true);
+          }}
+          onNavigateZones={() => {
+            document.getElementById('zonas')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onNavigateSimulator={() => {
+            document.getElementById('simulador')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+        />
       </header>
 
       <main className="flex-grow pb-16 md:pb-0">
@@ -1964,7 +1906,10 @@ export default function App() {
             </div>
 
             <button 
-              onClick={() => setIsContactModalOpen(false)}
+              onClick={() => {
+                setIsContactModalOpen(false);
+                setContactSubject('');
+              }}
               className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer"
               aria-label="Fechar"
             >
@@ -1975,6 +1920,15 @@ export default function App() {
               <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
               {t.directContact}
             </span>
+
+            {contactSubject && (
+              <div className="mb-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#f0f6f3] border border-[#10b981]/30 text-xs font-semibold text-[#0c241b]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>
+                  {contactSubject}
+                </span>
+              </div>
+            )}
 
             <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-1">
               {t.modalTitle}
@@ -2121,13 +2075,14 @@ export default function App() {
           </button>
           <button
             type="button"
-            onClick={() => setIsContactModalOpen(true)}
+            onClick={() => setIsMenuOpen(true)}
             className="flex flex-col items-center justify-center py-1 text-[#0c241b] active:scale-95 transition-all cursor-pointer min-h-[44px]"
+            aria-label="Menu principal"
           >
             <div className="w-7 h-7 rounded-full bg-[#0c241b] text-white flex items-center justify-center shadow-xs -mt-1 border border-emerald-900/40">
-              <Phone className="w-3.5 h-3.5 text-[#f59e0b]" />
+              <Menu className="w-4 h-4 text-[#f59e0b]" />
             </div>
-            <span className="text-[10px] font-bold tracking-tight text-[#0c241b]">Contacto</span>
+            <span className="text-[10px] font-bold tracking-tight text-[#0c241b]">Menu</span>
           </button>
         </div>
       </nav>
